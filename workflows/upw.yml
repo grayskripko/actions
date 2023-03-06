@@ -1,20 +1,18 @@
 on:
-  reddit:
-    url: https://reddit.com/hot/
-    config:
-      every: "0 7 * * *"
-      timeZone: UTC
-      outputsMode: combine
+  rss:
+    url: https://hnrss.org/newest?points=300&count=3
 jobs:
-  notify:
+  request:
+    name: Make a HTTP Request
     runs-on: ubuntu-latest
     steps:
-      - name: Send a telegram message
-        uses: appleboy/telegram-action@v0.1.0
+      - name: Make a HTTP Request
+        uses: actionsflow/axios@v1
         with:
-          to: ${{ secrets.TELEGRAM_TO }}
-          token: ${{ secrets.TELEGRAM_TOKEN }}
-          message: |
-            The weather is ${{on.weather.outputs.current.weather[0].description}} now, 
-            ${{on.weather.outputs.daily[0].temp.min}}~${{on.weather.outputs.daily[0].temp.min}}°, 
-            fell like ${{ on.weather.outputs.current.feels_like }}°, uv: ${{ on.weather.outputs.current.uvi }}
+          url: https://hookb.in/VGPzxoWbdjtE22bwznzE
+          method: POST
+          body: |
+            {
+              "link":"${{ on.rss.outputs.link }}", 
+              "title": "${{ on.rss.outputs.title }}",
+              "content":"<<<${{ on.rss.outputs.contentSnippet }}>>>"
