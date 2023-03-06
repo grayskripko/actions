@@ -1,12 +1,10 @@
 on:
-  weather:
-    apiKey: ${{ secrets.OPENWEATHERMAP_API_KEY }}
-    params:
-      lat: 51.509865
-      lon: -0.118092
-      units: metric
-    every: 0
-    timeZone: UTC
+  reddit:
+    url: https://reddit.com/hot/
+    config:
+      every: "0 7 * * *"
+      timeZone: UTC
+      outputsMode: combine
 jobs:
   notify:
     runs-on: ubuntu-latest
