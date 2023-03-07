@@ -9,10 +9,12 @@ def main():
     rss_feed_url = os.getenv('RSS_FEED_URL')
     bot_token = os.getenv('TELEGRAM_TOKEN')
     chat_id = os.getenv('TELEGRAM_TO')
-    print(rss_feed_url)
 
     # Fetch the RSS feed
     feed = feedparser.parse(rss_feed_url)
+    
+    print(11)
+    print(len(feed.entries))
 
     # Iterate through the feed entries and send new items to Telegram
     for entry in feed.entries:
