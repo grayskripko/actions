@@ -1,5 +1,0 @@
-  rss:
-    url: https://hnrss.org/newest?points=300
-    config:
-      every: "/30 * * * *"
-      limit: 10
