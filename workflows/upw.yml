@@ -1,0 +1,23 @@
+on:
+  rss:
+    url: https://hnrss.org/newest?points=300&count=3
+jobs:
+  request:
+    name: Make a HTTP Request
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Telegram Message Ok
+        uses: appleboy/telegram-action@master
+        env:
+          GITHUB_CONTEXT: ${{ toJSON(github) }}
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          format: markdown
+          message: |
+            *1st line of your message with bold*
+            *2nd line of your message with bold, too*
+            Application: *Write something to be put inside your message*. The below lines still are part of your message.          
+            Branch: *${{ github.ref }}*
+            Repository: *${{ github.repository }}*
+            Owner: *${{ github.repository_owner }}*
