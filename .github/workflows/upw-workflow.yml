@@ -1,7 +1,9 @@
 name: RSS to Telegram
 on:
+  push:
+    branches: [main]
   schedule:
-    - cron: "*/15 * * * *"
+    - cron: '*/30 * * * *'
 jobs:
   rss-to-telegram:
     runs-on: ubuntu-latest
