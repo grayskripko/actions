@@ -9,6 +9,7 @@ def main():
     rss_feed_url = os.getenv('RSS_FEED_URL')
     bot_token = os.getenv('TELEGRAM_TOKEN')
     chat_id = os.getenv('TELEGRAM_TO')
+    print(rss_feed_url)
 
     # Fetch the RSS feed
     feed = feedparser.parse(rss_feed_url)
