@@ -1,6 +1,7 @@
 import feedparser
 import telegram
 import os
+import datetime
 
 def send_message(bot, chat_id, message):
     bot.send_message(chat_id=chat_id, text=message)
@@ -12,18 +13,28 @@ def main():
 
     # Fetch the RSS feed
     feed = feedparser.parse(rss_feed_url)
+    update_freq = os.getenv('UPDATE_FREQ')
+    print(update_freq)
+    print(type(update_freq))
     
     # Iterate through the feed entries and send new items to Telegram
     for entry in feed.entries:
         # Check if the entry is newer than the last time we checked the feed
         # You can save the last timestamp in a file or database to persist across runs
-        print(entry.keys)
-        print(entry)
-        if 'last_checked_timestamp' not in entry:
-            entry.last_checked_timestamp = entry.published_parsed
-            continue
 
-        if entry.published_parsed > entry.last_checked_timestamp:
+        #published_date = 'Fri, 20 Jan 2023 17:24:22 +0000'
+        published_datetime = datetime.datetime.strptime(entry.published_parsed, '%a, %d %b %Y %H:%M:%S %z')
+        time_difference = datetime.datetime.now(datetime.timezone.utc) - published_datetime
+        
+        obsolete_threshold = datetime.timedelta(minutes=update_freq)
+        is_obsolete = time_difference > obsolete_threshold
+        print(time_difference)
+
+#         if 'last_checked_timestamp' not in entry:
+#             entry.last_checked_timestamp = entry.published_parsed
+#             continue
+#         if entry.published_parsed > entry.last_checked_timestamp:
+        if not is_obsolete:
             print('in')
             entry.last_checked_timestamp = entry.published_parsed
             message = f'{entry.title}\n{entry.link}'
