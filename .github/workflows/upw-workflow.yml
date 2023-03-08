@@ -16,7 +16,7 @@ jobs:
           python-version: '3.8'
       - name: Install dependencies
         run: pip install feedparser python-telegram-bot
-      - name: Fetch RSS feed
+      - name: Python script
         run: python fetch_rss.py
         env:
           RSS_FEED_URL: ${{ secrets.RSS_FEED_URL }}
