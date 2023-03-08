@@ -13,18 +13,18 @@ def main():
     # Fetch the RSS feed
     feed = feedparser.parse(rss_feed_url)
     
-    print(11)
-
     # Iterate through the feed entries and send new items to Telegram
     for entry in feed.entries:
         # Check if the entry is newer than the last time we checked the feed
         # You can save the last timestamp in a file or database to persist across runs
-        print(type(entry))
+        print(entry.keys)
+        print(entry)
         if 'last_checked_timestamp' not in entry:
             entry.last_checked_timestamp = entry.published_parsed
             continue
 
         if entry.published_parsed > entry.last_checked_timestamp:
+            print('in')
             entry.last_checked_timestamp = entry.published_parsed
             message = f'{entry.title}\n{entry.link}'
             bot = telegram.Bot(token=bot_token)
