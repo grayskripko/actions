@@ -5,7 +5,7 @@ on:
   push:
     branches: [main]
   schedule:
-    - cron: "*/$(awk 'BEGIN{printf "%d", 60 / ENVIRON["UPDATE_FREQ"]}') * * * *"
+    - cron: "*/${{ env.UPDATE_FREQ }}* * * *"
 jobs:
   rss-to-telegram:
     runs-on: ubuntu-latest
