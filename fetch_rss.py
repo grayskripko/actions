@@ -18,20 +18,16 @@ def main():
     feed = feedparser.parse(rss_feed_url)
     
     for entry in feed.entries:
-        # print(entry)
         published_datetime = datetime.datetime.strptime(entry.published, '%a, %d %b %Y %H:%M:%S %z')
         time_difference = datetime.datetime.now(datetime.timezone.utc) - published_datetime
         is_obsolete = time_difference > datetime.timedelta(minutes=update_freq)
 
         if not is_obsolete:
             print(entry)
-#             message = f'{entry.title.replace(' - Upwork', '')}\n{entry.summary}'
-            message='aa'
+            message = f'{entry.title.replace(' - Upwork', '')}\n{entry.summary}'
             print(message)
-#             bot = telegram.Bot(token=bot_token)
-#             await bot.send_message(chat_id=chat_id, text=message)
-            send_text = 'https://api.telegram.org/bot' + bot_token + '/sendMessage?chat_id=' + \
-                chat_id + '&parse_mode=Markdown&text=' + message
+            send_text = f'https://api.telegram.org/bot{bot_token}/sendMessage?chat_id=' + \
+                f'{chat_id}&parse_mode=Markdown&text={message}'
             response = requests.get(send_text)
             
 
