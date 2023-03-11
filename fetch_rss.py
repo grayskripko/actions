@@ -20,14 +20,14 @@ def main():
         # Check if the entry is newer than the last time we checked the feed
         # You can save the last timestamp in a file or database to persist across runs
 
-        #published_date = 'Fri, 20 Jan 2023 17:24:22 +0000'
-        print(entry)
+        # print(entry)
         published_datetime = datetime.datetime.strptime(entry.published, '%a, %d %b %Y %H:%M:%S %z')
         time_difference = datetime.datetime.now(datetime.timezone.utc) - published_datetime
         
         obsolete_threshold = datetime.timedelta(minutes=update_freq)
         is_obsolete = time_difference > obsolete_threshold
-        print(time_difference)
+        print(time_difference, is_obsolete)
+#         print(is_obsolete)
 
 #         if 'last_checked_timestamp' not in entry:
 #             entry.last_checked_timestamp = entry.published_parsed
