@@ -23,9 +23,12 @@ def main():
 
         if not is_obsolete:
 #             print(entry)
-            message = f'{entry.title.replace(" - Upwork", "")}\n{entry.summary}'
+            ttl = entry.title.replace(" - Upwork", "")
+            print(ttl)
+            print('>>')
+            message = f'{ttl}\n{entry.summary}'
             print(message)
-            message= 'aaa'
+#             message= 'aaa'
             send_text = f'https://api.telegram.org/bot{bot_token}/sendMessage?chat_id=' + \
                 f'{chat_id}&parse_mode=Markdown&text={message}'
             response = requests.get(send_text)
