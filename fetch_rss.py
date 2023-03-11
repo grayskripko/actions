@@ -12,7 +12,7 @@ def main():
     
     print(bot_token)
     print(len(bot_token))
-    update_freq = 24 * 60  # test
+    update_freq = 30 * 60  # test
 
     feed = feedparser.parse(rss_feed_url)
     
@@ -22,7 +22,7 @@ def main():
         is_obsolete = time_difference > datetime.timedelta(minutes=update_freq)
 
         if not is_obsolete:
-            print(entry)
+#             print(entry)
             message = f'{entry.title.replace(" - Upwork", "")}\n{entry.summary}'
             print(message)
             send_text = f'https://api.telegram.org/bot{bot_token}/sendMessage?chat_id=' + \
