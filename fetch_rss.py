@@ -1,17 +1,18 @@
 import feedparser
 import os
 import datetime
-import requests
+import telegram
     
 
+async def send_message(bot, chat_id, message):
+    await bot.send_message(chat_id=chat_id, text=message)
+    
 def main():
     rss_feed_url = os.getenv('RSS_FEED_URL')
     bot_token = os.getenv('TELEGRAM_TOKEN')
     chat_id = os.getenv('TELEGRAM_TO')
     update_freq = float(os.getenv('UPDATE_FREQ'))
     
-    print(bot_token)
-    print(len(bot_token))
     update_freq = 30 * 60  # test
 
     feed = feedparser.parse(rss_feed_url)
@@ -24,14 +25,13 @@ def main():
         if not is_obsolete:
 #             print(entry)
             ttl = entry.title.replace(" - Upwork", "")
-            print(ttl)
-            print('>>')
             message = f'{ttl}\n{entry.summary}'
             print(message)
-#             message= 'aaa'
-            send_text = f'https://api.telegram.org/bot{bot_token}/sendMessage?chat_id=' + \
-                f'{chat_id}&parse_mode=Markdown&text={message}'
-            response = requests.get(send_text)
+            bot = telegram.Bot(token=bot_token)
+            send_message(bot, chat_id, message)
+#             send_text = f'https://api.telegram.org/bot{bot_token}/sendMessage?chat_id=' + \
+#                 f'{chat_id}&parse_mode=Markdown&text={message}'
+#             response = requests.get(send_text)
             
 
 if __name__ == '__main__':
