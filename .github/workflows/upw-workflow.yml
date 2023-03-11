@@ -1,6 +1,6 @@
 name: RSS to Telegram
-#env:
-# UPDATE_FREQ: 30
+env:
+  UPDATE_FREQ: 30
 on:
   push:
     branches: [main]
