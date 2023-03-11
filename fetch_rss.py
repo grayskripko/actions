@@ -1,5 +1,4 @@
 import feedparser
-import telegram
 import os
 import datetime
 import requests
