@@ -25,6 +25,7 @@ def main():
 #             print(entry)
             message = f'{entry.title.replace(" - Upwork", "")}\n{entry.summary}'
             print(message)
+            message= 'aaa'
             send_text = f'https://api.telegram.org/bot{bot_token}/sendMessage?chat_id=' + \
                 f'{chat_id}&parse_mode=Markdown&text={message}'
             response = requests.get(send_text)
