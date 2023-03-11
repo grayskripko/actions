@@ -2,6 +2,7 @@ import feedparser
 import os
 import datetime
 import telegram
+from asyncio import run
     
 
 async def send_message(bot, chat_id, message):
@@ -28,7 +29,7 @@ def main():
             message = f'{ttl}\n{entry.summary}'
             print(message)
             bot = telegram.Bot(token=bot_token)
-            send_message(bot, chat_id, message)
+            run(send_message(bot, chat_id, message))
 #             send_text = f'https://api.telegram.org/bot{bot_token}/sendMessage?chat_id=' + \
 #                 f'{chat_id}&parse_mode=Markdown&text={message}'
 #             response = requests.get(send_text)
