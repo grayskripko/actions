@@ -26,7 +26,7 @@ def main():
         
         obsolete_threshold = datetime.timedelta(minutes=update_freq)
         is_obsolete = time_difference > obsolete_threshold
-        print(time_difference, is_obsolete)
+        print(time_difference, is_obsolete, time_difference > datetime.timedelta(minutes=22 * 60) )
 #         print(is_obsolete)
 
 #         if 'last_checked_timestamp' not in entry:
