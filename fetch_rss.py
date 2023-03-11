@@ -22,7 +22,7 @@ def main():
 
         #published_date = 'Fri, 20 Jan 2023 17:24:22 +0000'
         print(entry)
-        published_datetime = datetime.datetime.strptime(entry.published_parsed, '%a, %d %b %Y %H:%M:%S %z')
+        published_datetime = datetime.datetime.strptime(entry.published, '%a, %d %b %Y %H:%M:%S %z')
         time_difference = datetime.datetime.now(datetime.timezone.utc) - published_datetime
         
         obsolete_threshold = datetime.timedelta(minutes=update_freq)
