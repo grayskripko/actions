@@ -24,7 +24,8 @@ def main():
 
         if not is_obsolete:
             print(entry)
-            message = f'{entry.title}\n{entry.link}'
+#             message = f'{entry.title.replace(' - Upwork', '')}\n{entry.summary}'
+            message='aa'
             bot = telegram.Bot(token=bot_token)
             print(message)
             bot.send_message(chat_id=chat_id, text=message)
