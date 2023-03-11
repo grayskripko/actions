@@ -10,12 +10,10 @@ def main():
     rss_feed_url = os.getenv('RSS_FEED_URL')
     bot_token = os.getenv('TELEGRAM_TOKEN')
     chat_id = os.getenv('TELEGRAM_TO')
+    update_freq = float(os.getenv('UPDATE_FREQ'))
 
     # Fetch the RSS feed
     feed = feedparser.parse(rss_feed_url)
-    update_freq = os.getenv('UPDATE_FREQ')
-    print(update_freq)
-    print(type(update_freq))
     
     # Iterate through the feed entries and send new items to Telegram
     for entry in feed.entries:
@@ -23,6 +21,7 @@ def main():
         # You can save the last timestamp in a file or database to persist across runs
 
         #published_date = 'Fri, 20 Jan 2023 17:24:22 +0000'
+        print(entry)
         published_datetime = datetime.datetime.strptime(entry.published_parsed, '%a, %d %b %Y %H:%M:%S %z')
         time_difference = datetime.datetime.now(datetime.timezone.utc) - published_datetime
         
