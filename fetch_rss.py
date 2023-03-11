@@ -25,16 +25,15 @@ def main():
         time_difference = datetime.datetime.now(datetime.timezone.utc) - published_datetime
         
         obsolete_threshold = datetime.timedelta(minutes=update_freq)
-        is_obsolete = time_difference > obsolete_threshold
-        print(time_difference, is_obsolete, time_difference > datetime.timedelta(minutes=22 * 60) )
-#         print(is_obsolete)
+#         is_obsolete = time_difference > obsolete_threshold
+        is_obsolete = time_difference > datetime.timedelta(minutes=22 * 60)
 
 #         if 'last_checked_timestamp' not in entry:
 #             entry.last_checked_timestamp = entry.published_parsed
 #             continue
 #         if entry.published_parsed > entry.last_checked_timestamp:
         if not is_obsolete:
-            print('in')
+            print(entry)
             entry.last_checked_timestamp = entry.published_parsed
             message = f'{entry.title}\n{entry.link}'
             bot = telegram.Bot(token=bot_token)
