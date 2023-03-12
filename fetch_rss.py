@@ -21,8 +21,7 @@ def main():
     feed = feedparser.parse(rss_feed_url)
     
     run(send_message(
-        bot, chat_id, 'Tutoring In R ' +
-        'I just need about an hour of tutoring. <br /><br /><b>Hourly Range</b>: $20.00-$40.00'))
+        bot, chat_id, 'I just need about an hour of tutoring. <br /><br /><b>Hourly Range</b>: $20.00-$40.00'))
     
     for entry in feed.entries:
         published_datetime = datetime.datetime.strptime(entry.published, '%a, %d %b %Y %H:%M:%S %z')
