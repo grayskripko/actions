@@ -9,7 +9,7 @@ from asyncio import run
 async def send_message(bot, chat_id, message):
     await bot.send_message(
         chat_id=chat_id, text=html.escape(message),
-        parse_mode=telegram.ParseMode.HTML)
+        parse_mode=telegram.constants.ParseMode.HTML)
     
 def main():
     rss_feed_url = os.getenv('RSS_FEED_URL')
