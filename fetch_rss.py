@@ -17,7 +17,7 @@ def main():
     chat_id = os.getenv('TELEGRAM_TO')
     update_freq = float(os.getenv('UPDATE_FREQ'))
     
-    update_freq = 30 * 60  # test
+#     update_freq = 30 * 60  # test
     feed = feedparser.parse(rss_feed_url)
     
 #     bot = telegram.Bot(token=bot_token)
@@ -29,6 +29,7 @@ def main():
         time_difference = datetime.datetime.now(datetime.timezone.utc) - published_datetime
         is_obsolete = time_difference > datetime.timedelta(minutes=update_freq)
         
+        is_obsolete = False
         if not is_obsolete:
 #             print(entry)
             ttl = entry.title.replace(" - Upwork", "")
