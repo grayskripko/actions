@@ -23,7 +23,7 @@ def main():
     bot = telegram.Bot(token=bot_token)
     run(send_message(
         bot, chat_id, 
-        '<b>Hourly</b>
+        '<b>Hourly</b>'
 #         'I just need about an hour of tutoring. <br /><br /><b>Hourly Range</b>: $20.00-$40.00'
     ))
     
