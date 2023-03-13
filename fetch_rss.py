@@ -8,7 +8,8 @@ from asyncio import run
 
 async def send_message(bot, chat_id, message):
     await bot.send_message(
-        chat_id=chat_id, text=message,#html.escape(message),
+        chat_id=chat_id, text=html.unescape(
+            re.sub(r'<br\s*/>', '\n', message)),
         parse_mode=telegram.constants.ParseMode.HTML)
     
 def main():
@@ -19,13 +20,6 @@ def main():
     
 #     update_freq = 30 * 60  # test
     feed = feedparser.parse(rss_feed_url)
-    
-#     bot = telegram.Bot(token=bot_token)
-#     run(send_message(
-#         bot, chat_id, 
-#         '<b>Hourly</b>'
-# #         'I just need about an hour of tutoring. <br /><br /><b>Hourly Range</b>: $20.00-$40.00'
-#     ))
     
     for entry in feed.entries:
         published_datetime = datetime.datetime.strptime(entry.published, '%a, %d %b %Y %H:%M:%S %z')
