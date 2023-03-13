@@ -20,16 +20,18 @@ def main():
 #     update_freq = 30 * 60  # test
     feed = feedparser.parse(rss_feed_url)
     
-#     bot = telegram.Bot(token=bot_token)
-#     run(send_message(
-#         bot, chat_id, 'I just need about an hour of tutoring. <br /><br /><b>Hourly Range</b>: $20.00-$40.00'))
+    bot = telegram.Bot(token=bot_token)
+    run(send_message(
+        bot, chat_id, 
+        '<b>Hourly</b>
+#         'I just need about an hour of tutoring. <br /><br /><b>Hourly Range</b>: $20.00-$40.00'
+    ))
     
     for entry in feed.entries:
         published_datetime = datetime.datetime.strptime(entry.published, '%a, %d %b %Y %H:%M:%S %z')
         time_difference = datetime.datetime.now(datetime.timezone.utc) - published_datetime
         is_obsolete = time_difference > datetime.timedelta(minutes=update_freq)
         
-        is_obsolete = False
         if not is_obsolete:
 #             print(entry)
             ttl = entry.title.replace(" - Upwork", "")
