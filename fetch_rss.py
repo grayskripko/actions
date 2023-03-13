@@ -19,7 +19,6 @@ def main():
     chat_id = os.getenv('TELEGRAM_TO')
     update_freq = float(os.getenv('UPDATE_FREQ'))
     
-#     update_freq = 30 * 60  # test
     feed = feedparser.parse(rss_feed_url)
     
     for entry in feed.entries:
