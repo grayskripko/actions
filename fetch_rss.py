@@ -8,7 +8,7 @@ from asyncio import run
 
 async def send_message(bot, chat_id, message):
     await bot.send_message(
-        chat_id=chat_id, text=html.escape(message),
+        chat_id=chat_id, text=message,#html.escape(message),
         parse_mode=telegram.constants.ParseMode.HTML)
     
 def main():
