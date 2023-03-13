@@ -10,7 +10,7 @@ from asyncio import run
 async def send_message(bot, chat_id, message):
     await bot.send_message(
         chat_id=chat_id, text=html.unescape(
-            re.sub(r'<br\s*/>', '\n', message)),
+            re.sub(r'<br\s*/>', '', message)),
         parse_mode=telegram.constants.ParseMode.HTML)
     
 def main():
@@ -29,7 +29,7 @@ def main():
         is_obsolete= False
         
         if not is_obsolete:
-            ttl = entry.title.replace(" - Upwork", "")
+            ttl = '<b>' + entry.title.replace(" - Upwork", "") + '</b>'
             message = f'{ttl}\n{entry.summary}'
             print(message)
             bot = telegram.Bot(token=bot_token)
