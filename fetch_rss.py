@@ -10,7 +10,7 @@ from asyncio import run
 async def send_message(bot, chat_id, message):
     await bot.send_message(
         chat_id=chat_id, text=html.unescape(
-            re.sub(r'<br\s*/>', '', message)),
+            re.sub('\n\n', '\n', re.sub(r'<br\s*/>', '\n', message))),
         parse_mode=telegram.constants.ParseMode.HTML)
     
 def main():
