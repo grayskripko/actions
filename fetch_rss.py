@@ -26,7 +26,6 @@ def main():
         published_datetime = datetime.datetime.strptime(entry.published, '%a, %d %b %Y %H:%M:%S %z')
         time_difference = datetime.datetime.now(datetime.timezone.utc) - published_datetime
         is_obsolete = time_difference > datetime.timedelta(minutes=update_freq)
-        is_obsolete= False
         
         if not is_obsolete:
             ttl = '<b>' + entry.title.replace(" - Upwork", "") + '</b>'
