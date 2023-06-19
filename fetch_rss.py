@@ -14,6 +14,7 @@ async def send_message(bot, chat_id, message):
         parse_mode=telegram.constants.ParseMode.HTML)
     
 def main():
+    # https://www.upwork.com/ab/feed/topics/rss?securityToken={}&userUid={}&orgUid={}&topic={}
     rss_feed_url = os.getenv('RSS_FEED_URL')
     bot_token = os.getenv('TELEGRAM_TOKEN')
     chat_id = os.getenv('TELEGRAM_TO')
