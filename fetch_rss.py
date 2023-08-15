@@ -18,6 +18,7 @@ def main():
     rss_feed_url = os.getenv('RSS_FEED_URL')
     bot_token = os.getenv('TELEGRAM_TOKEN')
     chat_id = os.getenv('TELEGRAM_TO')
+    print(rss_feed_url)
     update_freq = 15
     min_hourly = 25  # dollars per hour
     
