@@ -25,7 +25,7 @@ def main():
     
     for i, entry in enumerate(feed.entries):
         if i == 0:
-            print('f{entry.title}, {str(entry.published)}')
+            print(f'{entry.title}, {str(entry.published)}')
         published_datetime = datetime.datetime.strptime(entry.published, '%a, %d %b %Y %H:%M:%S %z')
         time_difference = datetime.datetime.now(datetime.timezone.utc) - published_datetime
         is_obsolete = time_difference > datetime.timedelta(minutes=update_freq)
