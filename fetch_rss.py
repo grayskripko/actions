@@ -23,28 +23,29 @@ def main():
     bot_token = os.getenv('TELEGRAM_TOKEN')
     chat_id = os.getenv('TELEGRAM_TO')
 
-    update_freq = 10 + 1
+    update_freq = (10 + 1) * 60
     min_hourly_salary = 20
     
     feed = feedparser.parse(get_url())
     
     for i, entry in enumerate(feed.entries):
-        if i == 0:
-            print(f'{entry.title}, {str(entry.published)}')
+        ttl = '<b>' + entry.title.replace(" - Upwork", "") + '</b>'
+
         published_datetime = datetime.strptime(entry.published, '%a, %d %b %Y %H:%M:%S %z')
         time_difference = datetime.now(timezone.utc) - published_datetime
-        is_obsolete = time_difference > timedelta(minutes=update_freq)
-        
-        if not is_obsolete:
-            min_hourly_regx = re.search(r'Hourly Range</b>: \$([^\.-]+)', entry['summary'])
-            if min_hourly_regx and int(min_hourly_regx[1]) < min_hourly_salary:
-               print(f'> skipping: {min_hourly_regx[1]}')
-               continue
-            ttl = '<b>' + entry.title.replace(" - Upwork", "") + '</b>'
-            message = f'{ttl}\n{entry.summary}'
-            print(message)
-            bot = telegram.Bot(token=bot_token)
-            run(send_message(bot, chat_id, message))
+        if time_difference > timedelta(seconds=update_freq):
+            print(f'Obsolete [{ttl}]: {time_difference}, {datetime.now(timezone.utc)}, {published_datetime}')
+            continue
+
+        min_hourly_regx = re.search(r'Hourly Range</b>: \$([^\.-]+)', entry['summary'])
+        if min_hourly_regx and int(min_hourly_regx[1]) < min_hourly_salary:
+            print(f'Cheap [{ttl}]: {min_hourly_regx[1]}')
+            continue
+
+        message = f'{ttl}\n{entry.summary}'
+        print(f'Tg [{ttl}]')
+        bot = telegram.Bot(token=bot_token)
+        run(send_message(bot, chat_id, message))
             
 
 if __name__ == '__main__':
