@@ -1,13 +1,11 @@
 from datetime import datetime
 import pandas as pd
 import feedparser
-from urllib.parse import quote
 from fetch_rss import get_url
 
 
 def print_recent_gigs(url):
-    rss_feed_url = quote(url, safe=':/&=?')
-    feed = feedparser.parse(rss_feed_url)
+    feed = feedparser.parse(url)
     res = pd.DataFrame(feed['entries'])\
         .assign(date = lambda d: d['published'].apply(
             lambda x: datetime.strptime(x, '%a, %d %b %Y %H:%M:%S %z').strftime('%a %H:%M')),\
