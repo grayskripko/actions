@@ -25,7 +25,7 @@ def main():
     bot_token = os.getenv('TELEGRAM_TOKEN')
     chat_id = os.getenv('TELEGRAM_TO')
 
-    update_freq = 10.5
+    update_freq = 10 + 1
     min_hourly_salary = 25
     
     feed = feedparser.parse(get_url())
