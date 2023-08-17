@@ -9,9 +9,8 @@ def get_url():
     prv = os.getenv('UPWORKER_PRV')
     url = 'https://www.upwork.com/ab/feed/jobs/rss?' + prv +\
         '&api_params=1&contractor_tier=2,3&paging=0;10&sort=recency&verified_payment_only=1' +\
-        '&hourly_rate=50-&job_type=hourly&proposals=0-4,5-9,10-14,15-19&q=' +\
-        '("google analytics" OR GA OR airtable) OR ' +\
-        'skills:(excel OR airtable OR sql OR "data analytics" OR "data analysis")'
+        '&hourly_rate=50-&job_type=hourly&proposals=0-4,5-9,10-14,15-19&q='+\
+        'skills:("google analytics" OR airtable OR "google sheets" OR excel OR sql OR dashboard OR "data analytics" OR "data analysis")'
     return quote(url, safe=':/&=?')
 
 async def send_message(bot, chat_id, message):
