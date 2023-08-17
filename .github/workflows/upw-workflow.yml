@@ -1,9 +1,7 @@
 name: RSS to Telegram
-env:
-  UPDATE_FREQ: 30
 on:
   schedule:
-    - cron: "0/15 * * * *"
+    - cron: "0/10 * * * *"
   push:
     branches: [main]
 jobs:
@@ -21,6 +19,5 @@ jobs:
       - name: Script >>>
         run: python fetch_rss.py
         env:
-          RSS_FEED_URL: ${{ secrets.RSS_FEED_URL }}
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_TO: ${{ secrets.TELEGRAM_TO }}
