@@ -24,7 +24,7 @@ def main():
     chat_id = os.getenv('TELEGRAM_TO')
 
     update_freq = 10 + 1
-    min_hourly_salary = 25
+    min_hourly_salary = 20
     
     feed = feedparser.parse(get_url())
     
@@ -38,6 +38,7 @@ def main():
         if not is_obsolete:
             min_hourly_regx = re.search(r'Hourly Range</b>: \$([^\.-]+)', entry['summary'])
             if min_hourly_regx and int(min_hourly_regx[1]) < min_hourly_salary:
+               print(f'> skipping: {min_hourly_regx[1]}')
                continue
             ttl = '<b>' + entry.title.replace(" - Upwork", "") + '</b>'
             message = f'{ttl}\n{entry.summary}'
