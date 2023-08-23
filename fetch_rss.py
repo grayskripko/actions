@@ -10,7 +10,7 @@ def get_url():
     url = 'https://www.upwork.com/ab/feed/jobs/rss?' + prv +\
         '&api_params=1&contractor_tier=2,3&paging=0;10&sort=recency&verified_payment_only=1' +\
         '&hourly_rate=30-&job_type=hourly&q='+\
-        'skills:(airtable OR "google sheets" OR excel OR R OR sql OR etl OR dashboard OR dash ' +\
+        'skills:(airtable OR "google sheets" OR excel OR R OR sql OR etl OR dashboard OR dash OR ' +\
         '"data analytics" OR "data analysis") AND ' +\
         'NOT skills:("google tag manager")'
     return quote(url, safe=':/&=?')
