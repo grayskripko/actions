@@ -11,7 +11,8 @@ def get_url():
     url = 'https://www.upwork.com/ab/feed/jobs/rss?&' + prv +\
         'api_params=1&contractor_tier=2,3&paging=0;10&sort=recency&verified_payment_only=1&' +\
         'job_type=hourly,fixed&budget=300-&hourly_rate=30-&q=' +\
-        f'skills:(dax OR spark OR database R OR sql OR etl OR dashboard OR dash OR "data analytics" OR "data analysis" {add_excel}) AND NOT skills:("google tag manager")'
+        f'skills:(dax OR spark OR database R OR sql OR etl OR dashboard OR dash OR "data analytics" OR "data analysis" {add_excel})'
+    print(url)
     return quote(url, safe=':/&=?')
 
 async def send_message(bot, chat_id, message):
