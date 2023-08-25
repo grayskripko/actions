@@ -11,9 +11,10 @@ def get_url():
     url = f'https://www.upwork.com/ab/feed/jobs/rss?{prv}&' +\
         'api_params=1&contractor_tier=2,3&paging=0;10&sort=recency&verified_payment_only=1&' +\
         'job_type=hourly,fixed&budget=300-&hourly_rate=30-&q=' +\
-        f'skills:(R OR sql OR etl OR dashboard OR dash OR "data analytics" OR "data analysis" {add_excel})'
-    print(url)
+        f'skills:(R OR sql OR etl OR dashboard OR dash OR "data analysis" {add_excel})'
+    # print(url)
     return quote(url, safe=':/&=?')
+    
 
 async def send_message(bot, chat_id, message):
     await bot.send_message(
@@ -45,6 +46,8 @@ def main():
             continue
 
         message = f'{ttl}\n{entry.summary}'
+        if len(message) > 4000:
+            message = f'{message[:2000]}\n...\n{message[-2000:]}'
         print(f'+ Send [{ttl}]')
         bot = telegram.Bot(token=bot_token)
         run(send_message(bot, chat_id, message))
