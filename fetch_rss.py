@@ -5,6 +5,7 @@ from urllib.parse import quote
 from asyncio import run
     
 
+
 def get_url():
     url = f'https://www.upwork.com/ab/feed/jobs/rss?{os.getenv("UPWORKER_PRV")}&' +\
         'api_params=1&contractor_tier=2,3&paging=0;10&sort=recency&verified_payment_only=1&' +\
@@ -13,14 +14,18 @@ def get_url():
 
     print(url)
     return quote(url, safe=':/&=?')
-    
 
 async def send_message(bot, chat_id, message):
     await bot.send_message(
         chat_id=chat_id, text=html.unescape(
             re.sub('\n\n', '\n', re.sub(r'<br\s*/>', '\n', message))),
         parse_mode=telegram.constants.ParseMode.HTML)
-    
+
+def strfdelta(tdelta):
+    minutes, seconds = divmod(tdelta.seconds, 60)
+    hours, minutes = divmod(minutes, 60)
+    return f"{hours}h:{minutes}m:{seconds}s"
+
 def main():
     bot_token = os.getenv('TELEGRAM_TOKEN')
     chat_id = os.getenv('TELEGRAM_TO')
@@ -34,9 +39,9 @@ def main():
         ttl = '<b>' + entry.title.replace(" - Upwork", "") + '</b>'
 
         published_datetime = datetime.strptime(entry.published, '%a, %d %b %Y %H:%M:%S %z')
-        time_difference = datetime.now(timezone.utc) - published_datetime
-        if time_difference > timedelta(seconds=update_freq):
-            print(f'- Old [{ttl}]: {time_difference}, {datetime.now(timezone.utc)}, {published_datetime}')
+        time_diff = datetime.now(timezone.utc) - published_datetime
+        if time_diff > timedelta(seconds=update_freq):
+            print(f'- Old [{ttl}]: {strfdelta(time_diff)}, {datetime.now(timezone.utc)}, {published_datetime}')
             continue
 
         min_hourly_regx = re.search(r'Hourly Range</b>: \$([^\.-]+)', entry['summary'])
