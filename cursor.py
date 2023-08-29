@@ -4,6 +4,15 @@ models = openai.Model.list()
 gpt4 = [x for x in [dict(d)['id'] for d in models['data']] if 'gpt-4' in x]
 print('gpt-4 is here!' if len(gpt4) > 0 else 'gpt-4 :(')
 
+print([x for x in [dict(d)['id'] for d in models['data']] if 'gpt' in x])
+
+#    response = openai.ChatCompletion.create(
+#          model="gpt-3.5-turbo-16k", n=1,
+#          messages=[
+#             {"role": "user", "content": "Write me a long story about rabbit"}
+#          ])
+#    print(response['choices'][0]['message']['content'])
+
 
 '''
 Step 1: Try generating with Cmd+K or Ctrl+K on a new line. Ask for CLI-based game of TicTacToe.
@@ -22,6 +31,3 @@ Step 4: To try out cursor on your own projects, go to the file menu (top left) a
 
 generate edits, spot bugs, find code, learn about docs, and explain code.
 '''
-
-
-

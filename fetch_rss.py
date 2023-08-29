@@ -10,7 +10,7 @@ def get_url():
     url = f'https://www.upwork.com/ab/feed/jobs/rss?{os.getenv("UPWORKER_PRV")}&' +\
         'api_params=1&contractor_tier=2,3&paging=0;10&sort=recency&verified_payment_only=1&' +\
         'job_type=hourly,fixed&budget=300-&hourly_rate=30-&q=' +\
-        'skills:(R OR etl OR dashboard OR dash OR "data analysis") OR (skills:("google sheets" OR excel OR airtable OR sql) AND NOT skills:("web design" OR "web development" OR "web application"))'
+        '(skills:(R OR etl OR dashboard OR dash OR "data analysis") OR (skills:("google sheets" OR excel OR airtable OR sql) AND NOT skills:("web design" OR "web development" OR "web application"))) AND NOT India'
 
     print(url)
     return quote(url, safe=':/&=?')
