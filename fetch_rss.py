@@ -41,7 +41,7 @@ def main():
         published_datetime = datetime.strptime(entry.published, '%a, %d %b %Y %H:%M:%S %z')
         time_diff = datetime.now(timezone.utc) - published_datetime
         if time_diff > timedelta(seconds=update_freq):
-            print(f'- Old [{ttl}]: {strfdelta(time_diff)}, {datetime.now(timezone.utc)}, {published_datetime}')
+            print(f'- Old [{ttl}]: {strfdelta(time_diff)}')
             continue
 
         min_hourly_regx = re.search(r'Hourly Range</b>: \$([^\.-]+)', entry['summary'])
