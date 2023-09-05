@@ -10,7 +10,7 @@ SETTINGS = dict(
     update_freq = (10 + 1) * 60,
     min_hourly_salary = 20,
     queries = [
-        '(skills:(R OR etl OR dashboard OR "data analysis" or pandas) OR (skills:("google sheets" OR excel OR airtable OR sql) AND NOT skills:(seo OR lead OR market OR "data entry" OR "google analytics"))) AND NOT (India OR "full stack")',
+        '(skills:("data analysis" OR R OR etl OR dashboard OR pandas) OR (skills:("google sheets" OR excel OR airtable OR sql) AND NOT skills:(seo OR lead OR m arket OR "data entry" OR "google analytics"))) AND NOT (India OR "full stack")',
         'skills:(chatgpt OR openai OR llm) AND NOT Midjourney'
         ])
     
@@ -66,7 +66,7 @@ def main():
         if message in processed:
             print(f'- Duplicated [{ttl}]')
             continue
-        
+
         processed.append(message)
         print(f'+ Send [{ttl}]')
         bot = telegram.Bot(token=bot_token)
