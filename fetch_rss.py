@@ -11,13 +11,16 @@ SETTINGS = dict(
     min_hourly_salary = 20,
     queries = [
         '(skills:(R OR etl OR dashboard OR "data analysis" or pandas) OR (skills:("google sheets" OR excel OR airtable OR sql) AND NOT skills:(seo OR lead OR market OR "data entry" OR "google analytics"))) AND NOT (India OR "full stack")',
-        'skills:(chatgpt OR openai OR llm OR ai) AND (skills:(azure) OR "q&a" OR "question answering")'])
+        'skills:(chatgpt OR openai OR llm) AND NOT Midjourney'
+        ])
     
 def get_url(query):
+    assert "skills:(" in query
     # 'job_type=hourly,fixed&budget=500-&hourly_rate=30-&q=' +\
     url = f'https://www.upwork.com/ab/feed/jobs/rss?{os.getenv("UPWORKER_PRV")}&' +\
         'api_params=1&contractor_tier=2,3&paging=0;10&sort=recency&verified_payment_only=1&' +\
         f'job_type=hourly&hourly_rate=30-&q={query}'
+    # .replace("&", "%26")
     print(url)
     time.sleep(2)
     return quote(url, safe=':/&=?')
@@ -36,12 +39,13 @@ def strfdelta(tdelta):
 def main():
     bot_token = os.getenv('TELEGRAM_TOKEN')
     chat_id = os.getenv('TELEGRAM_TO')
+    # print(get_url(SETTINGS['queries'][0]))
     feed = [(qr, entr) for qr in SETTINGS['queries'] for entr in feedparser.parse(get_url(qr)).entries]
     print(len(feed))
     
     for quer, entry in feed:
-        short_qr = re.search(r'skills:\((\w+)', quer).group(1)
-        ttl = f'<b>{entry.title.replace(" - Upwork", "")}</b>{short_qr}'
+        short_qr = re.search(r'skills:\("?(\w+)', quer).group(1)
+        ttl = f'<b>{entry.title.replace(" - Upwork", "")}</b> {short_qr}'
 
         published_datetime = datetime.strptime(entry.published, '%a, %d %b %Y %H:%M:%S %z')
         time_diff = datetime.now(timezone.utc) - published_datetime
@@ -58,8 +62,8 @@ def main():
         if len(message) > 4000:
             message = f'{message[:2000]}\n...\n{message[-2000:]}'
         print(f'+ Send [{ttl}]')
-        bot = telegram.Bot(token=bot_token)
-        run(send_message(bot, chat_id, message))
+        # bot = telegram.Bot(token=bot_token)
+        # run(send_message(bot, chat_id, message))
             
 
 if __name__ == '__main__':
