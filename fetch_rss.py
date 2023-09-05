@@ -5,12 +5,12 @@ from urllib.parse import quote
 from asyncio import run
     
 
-
 def get_url():
+    # 'job_type=hourly,fixed&budget=500-&hourly_rate=30-&q=' +\
     url = f'https://www.upwork.com/ab/feed/jobs/rss?{os.getenv("UPWORKER_PRV")}&' +\
         'api_params=1&contractor_tier=2,3&paging=0;10&sort=recency&verified_payment_only=1&' +\
-        'job_type=hourly,fixed&budget=300-&hourly_rate=30-&q=' +\
-        '(skills:(R OR etl OR dashboard OR dash OR "data analysis") OR (skills:("google sheets" OR excel OR airtable OR sql) AND NOT skills:("web design" OR "web development" OR "web application"))) AND NOT India'
+        'job_type=hourly&hourly_rate=30-&q=' +\
+        '(skills:(R OR etl OR dashboard OR "data analysis" or pandas) OR (skills:("google sheets" OR excel OR airtable OR sql) AND NOT skills:(seo OR lead OR market OR "data entry" OR "google analytics"))) AND NOT India'
 
     print(url)
     return quote(url, safe=':/&=?')
