@@ -43,6 +43,7 @@ def main():
     feed = [(qr, entr) for qr in SETTINGS['queries'] for entr in feedparser.parse(get_url(qr)).entries]
     print(len(feed))
     
+    processed = []
     for quer, entry in feed:
         short_qr = re.search(r'skills:\("?(\w+)', quer).group(1)
         ttl = f'<b>{entry.title.replace(" - Upwork", "")}</b> {short_qr}'
@@ -61,9 +62,15 @@ def main():
         message = f'{ttl}\n{entry.summary}'
         if len(message) > 4000:
             message = f'{message[:2000]}\n...\n{message[-2000:]}'
+
+        if message in processed:
+            print(f'- Duplicated [{ttl}]')
+            continue
+        
+        processed.append(message)
         print(f'+ Send [{ttl}]')
-        # bot = telegram.Bot(token=bot_token)
-        # run(send_message(bot, chat_id, message))
+        bot = telegram.Bot(token=bot_token)
+        run(send_message(bot, chat_id, message))
             
 
 if __name__ == '__main__':
