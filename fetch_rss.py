@@ -2,17 +2,24 @@ import feedparser, os
 from datetime import datetime, timezone, timedelta
 import telegram, html, re
 from urllib.parse import quote
+import time
 from asyncio import run
     
 
-def get_url():
+SETTINGS = dict(
+    update_freq = (10 + 1) * 60,
+    min_hourly_salary = 20,
+    queries = [
+        '(skills:(R OR etl OR dashboard OR "data analysis" or pandas) OR (skills:("google sheets" OR excel OR airtable OR sql) AND NOT skills:(seo OR lead OR market OR "data entry" OR "google analytics"))) AND NOT (India OR "full stack")',
+        'skills:(chatgpt OR openai OR llm OR ai) AND (skills:(azure) OR "q&a" OR "question answering")'])
+    
+def get_url(query):
     # 'job_type=hourly,fixed&budget=500-&hourly_rate=30-&q=' +\
     url = f'https://www.upwork.com/ab/feed/jobs/rss?{os.getenv("UPWORKER_PRV")}&' +\
         'api_params=1&contractor_tier=2,3&paging=0;10&sort=recency&verified_payment_only=1&' +\
-        'job_type=hourly&hourly_rate=30-&q=' +\
-        '(skills:(R OR etl OR dashboard OR "data analysis" or pandas) OR (skills:("google sheets" OR excel OR airtable OR sql) AND NOT skills:(seo OR lead OR market OR "data entry" OR "google analytics"))) AND NOT (India OR "full stack")'
-
+        f'job_type=hourly&hourly_rate=30-&q={query}'
     print(url)
+    time.sleep(2)
     return quote(url, safe=':/&=?')
 
 async def send_message(bot, chat_id, message):
@@ -29,23 +36,20 @@ def strfdelta(tdelta):
 def main():
     bot_token = os.getenv('TELEGRAM_TOKEN')
     chat_id = os.getenv('TELEGRAM_TO')
-
-    update_freq = (10 + 1) * 60
-    min_hourly_salary = 20
+    feed = [(qr, entr) for qr in SETTINGS['queries'] for entr in feedparser.parse(get_url(qr)).entries]
     
-    feed = feedparser.parse(get_url())
-    
-    for i, entry in enumerate(feed.entries):
-        ttl = '<b>' + entry.title.replace(" - Upwork", "") + '</b>'
+    for quer, entry in feed:
+        short_qr = re.search(r'skills:\((\w+)', quer).group(1)
+        ttl = f'<b>{entry.title.replace(" - Upwork", "")}</b>{short_qr}'
 
         published_datetime = datetime.strptime(entry.published, '%a, %d %b %Y %H:%M:%S %z')
         time_diff = datetime.now(timezone.utc) - published_datetime
-        if time_diff > timedelta(seconds=update_freq):
+        if time_diff > timedelta(seconds=SETTINGS['update_freq']):
             print(f'- Old [{ttl}]: {strfdelta(time_diff)}')
             continue
 
         min_hourly_regx = re.search(r'Hourly Range</b>: \$([^\.-]+)', entry['summary'])
-        if min_hourly_regx and int(min_hourly_regx[1]) < min_hourly_salary:
+        if min_hourly_regx and int(min_hourly_regx[1]) < SETTINGS['min_hourly_salary']:
             print(f'- Cheap [{ttl}]: {min_hourly_regx[1]}')
             continue
 
