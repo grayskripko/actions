@@ -37,6 +37,7 @@ def main():
     bot_token = os.getenv('TELEGRAM_TOKEN')
     chat_id = os.getenv('TELEGRAM_TO')
     feed = [(qr, entr) for qr in SETTINGS['queries'] for entr in feedparser.parse(get_url(qr)).entries]
+    print(len(feed))
     
     for quer, entry in feed:
         short_qr = re.search(r'skills:\((\w+)', quer).group(1)
