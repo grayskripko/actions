@@ -1,0 +1,24 @@
+name: RSS to Telegram
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '*/30 * * * *'
+jobs:
+  rss-to-telegram:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Setup Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+      - name: Install dependencies
+        run: pip install feedparser python-telegram-bot
+      - name: Fetch RSS feed
+        run: python fetch_rss.py
+        env:
+          RSS_FEED_URL: ${{ secrets.RSS_FEED_URL }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_TO }}

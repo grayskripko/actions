@@ -10,7 +10,7 @@ SETTINGS = dict(
     update_freq = (10 + 1) * 60,
     min_hourly_salary = 20,
     queries = [
-        '(skills:("data analysis" OR R OR etl OR dashboard OR pandas) OR (skills:("google sheets" OR excel OR airtable OR sql) AND NOT skills:(seo OR lead OR m arket OR "data entry" OR "google analytics"))) AND NOT (India OR "full stack")',
+        '(skills:("data analysis" OR R OR etl OR dashboard OR pandas) OR (skills:("google sheets" OR excel OR airtable OR sql) AND NOT skills:(seo OR lead OR m arket OR "data entry"))) AND NOT (India OR "full stack")',
         'skills:(chatgpt OR openai OR llm) AND NOT Midjourney'
         ])
     
@@ -19,7 +19,7 @@ def get_url(query):
     # 'job_type=hourly,fixed&budget=500-&hourly_rate=30-&q=' +\
     url = f'https://www.upwork.com/ab/feed/jobs/rss?{os.getenv("UPWORKER_PRV")}&' +\
         'api_params=1&contractor_tier=2,3&paging=0;10&sort=recency&verified_payment_only=1&' +\
-        f'job_type=hourly&hourly_rate=30-&q={query}'
+        f'job_type=hourly&hourly_rate=40-&workload=full_time&q={query}'
     # .replace("&", "%26")
     print(url)
     time.sleep(2)
@@ -46,7 +46,7 @@ def main():
     processed = []
     for quer, entry in feed:
         short_qr = re.search(r'skills:\("?(\w+)', quer).group(1)
-        ttl = f'<b>{entry.title.replace(" - Upwork", "")}</b> {short_qr}'
+        ttl = f'<b>{entry.title.replace(" - Upwork", "")}</b> [{short_qr}]'
 
         published_datetime = datetime.strptime(entry.published, '%a, %d %b %Y %H:%M:%S %z')
         time_diff = datetime.now(timezone.utc) - published_datetime
