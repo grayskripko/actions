@@ -17,10 +17,10 @@ SETTINGS = dict(
 def get_url(query):
     assert "skills:(" in query
     fulltime_type = ['', '&workload=full_time'][0]
-    # 'job_type=hourly,fixed&budget=500-&hourly_rate=30-&q=' +\
+    duration_v3=['', '&duration_v3=months,semester,ongoing'][0]
     url = f'https://www.upwork.com/ab/feed/jobs/rss?{os.getenv("UPWORKER_PRV")}&' +\
         'api_params=1&contractor_tier=2,3&paging=0;10&sort=recency&verified_payment_only=1&' +\
-        f'job_type=hourly&hourly_rate=40-{fulltime_type}&q={query}'
+        f'job_type=hourly&hourly_rate=40-{fulltime_type}{duration_v3}&q={query}'
     # .replace("&", "%26")
     print(url)
     time.sleep(2)
