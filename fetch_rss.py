@@ -10,8 +10,8 @@ SETTINGS = dict(
     update_freq = (10 + 1) * 60,
     min_hourly_salary = 20,
     queries = [
-        '(skills:("data analysis" OR R OR etl OR dashboard OR pandas OR "power bi" OR tableau OR looker) OR (skills:("google sheets" OR excel OR airtable OR sql) AND NOT skills:(seo OR lead OR m arket OR "data entry"))) AND NOT (India OR "full stack")',
-        'skills:(chatgpt OR openai OR llm) AND NOT Midjourney'
+        '(skills:("data analysis" OR R OR etl OR dashboard OR pandas OR "power bi" OR tableau OR looker) OR (skills:("google sheets" OR excel OR airtable OR sql) AND NOT skills:(seo OR lead OR m arket OR "data entry"))) AND NOT (India OR "full stack")'#,
+        # 'skills:(chatgpt OR openai OR llm) AND NOT Midjourney'
         ])
     
 def get_url(query):
