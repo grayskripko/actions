@@ -10,7 +10,7 @@ SETTINGS = dict(
     update_freq = (10 + 1) * 60,
     min_hourly_salary = 20,
     queries = [
-        '(skills:("data analysis" OR R OR etl OR dashboard OR pandas OR "power bi" OR tableau OR looker) OR (skills:("google sheets" OR excel OR airtable OR sql) AND NOT skills:(seo OR lead OR m arket OR "data entry"))) AND NOT (India OR "full stack")'#,
+        '(skills:("power bi" OR tableau OR looker OR "data analysis" OR R OR etl OR dashboard OR pandas) OR (skills:("google sheets" OR excel OR airtable OR sql) AND NOT skills:(seo OR lead OR m arket OR "data entry"))) AND NOT (India OR "full stack")'#,
         # 'skills:(chatgpt OR openai OR llm) AND NOT Midjourney'
         ])
     
@@ -55,9 +55,14 @@ def main():
             print(f'- Old [{ttl}]: {strfdelta(time_diff)}')
             continue
 
-        min_hourly_regx = re.search(r'Hourly Range</b>: \$([^\.-]+)', entry['summary'])
+        min_hourly_regx = re.search(r'Hourly Range</b>: \$([^\.-]+)', entry.summary)
         if min_hourly_regx and int(min_hourly_regx[1]) < SETTINGS['min_hourly_salary']:
             print(f'- Cheap [{ttl}]: {min_hourly_regx[1]}')
+            continue
+
+        us_job = 'Only freelancers located in the United States may apply'
+        if us_job in entry.summary:
+            print(f'- US only [{ttl}]')
             continue
 
         message = f'{ttl}\n{entry.summary}'
@@ -67,8 +72,8 @@ def main():
         if message in processed:
             print(f'- Duplicated [{ttl}]')
             continue
-
         processed.append(message)
+        
         print(f'+ Send [{ttl}]')
         bot = telegram.Bot(token=bot_token)
         run(send_message(bot, chat_id, message))
