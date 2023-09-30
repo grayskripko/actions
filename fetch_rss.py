@@ -7,7 +7,7 @@ from asyncio import run
     
 
 SETTINGS = dict(
-    update_freq = (10 + 1) * 60,
+    update_freq = (10 + 0.5) * 60,
     min_hourly_salary = 20,
     queries = [
         'skills:("power bi" OR tableau OR looker OR "data analysis" OR R OR etl OR dashboard OR pandas)'#,
