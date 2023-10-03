@@ -8,12 +8,12 @@ from asyncio import run
 
 SETTINGS = dict(
     update_freq = (5 + 0.5) * 60,
-    min_hourly = 15,
+    min_hourly = 10,
     target_hourly = 40,
-    fulltime_type = ['', '&workload=full_time'][False],
-    duration_v3=['', '&duration_v3=months,semester,ongoing'][False],
-    queries = [f'{x} NOT India' for x in [
-        'skills:("data analysis" OR "power bi" OR tableau OR R OR etl OR dashboard OR pandas)',
+    full_week =['', '&workload=full_time'][False],
+    more_month=['', '&duration_v3=months,semester,ongoing'][False],
+    queries  = [f'{x} NOT India' for x in [
+        'skills:("data analysis") OR "power bi" OR tableau OR R OR etl OR dashboard',
         'skills:("google analytics")'
         ]])
     
@@ -22,9 +22,12 @@ def get_url(query):
     url = f'https://www.upwork.com/ab/feed/jobs/rss?{os.getenv("UPWORKER_PRV")}&' +\
         'api_params=1&sort=recency&verified_payment_only=1&paging=0;10&' +\
         f'job_type=hourly&hourly_rate={SETTINGS["target_hourly"]}-' +\
-        f'{SETTINGS["fulltime_type"]}{SETTINGS["duration_v3"]}&q={query}'
+        f'{SETTINGS["full_week"]}{SETTINGS["more_month"]}&q={query}'
     # .replace("&", "%26")
-    print(url)
+    click_url = re.sub(
+        r'.*/rss\?\*\*\*&', 
+        'https://www.upwork.com/nx/jobs/search/?', url)
+    print(click_url)
     time.sleep(2)
     return quote(url, safe=':/&=?')
 
