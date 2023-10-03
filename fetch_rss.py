@@ -9,7 +9,7 @@ from asyncio import run
 SETTINGS = dict(
     update_freq = (5 + 0.5) * 60,
     min_hourly = 10,
-    target_hourly = 40,
+    target_hourly = 35,
     full_week =['', '&workload=full_time'][False],
     more_month=['', '&duration_v3=months,semester,ongoing'][False],
     queries  = [f'{x} NOT India' for x in [
