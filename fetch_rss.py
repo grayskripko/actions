@@ -9,7 +9,9 @@ from asyncio import run
 SETTINGS = dict(
     update_freq = (5 + 0.5) * 60,
     min_hourly = 15,
-    target_hourly = 30,
+    target_hourly = 40,
+    fulltime_type = ['', '&workload=full_time'][False],
+    duration_v3=['', '&duration_v3=months,semester,ongoing'][False],
     queries = [f'{x} NOT India' for x in [
         'skills:("data analysis" OR "power bi" OR tableau OR R OR etl OR dashboard OR pandas)',
         'skills:("google analytics")'
@@ -17,12 +19,10 @@ SETTINGS = dict(
     
 def get_url(query):
     assert "skills:(" in query
-    fulltime_type = ['', '&workload=full_time'][0]
-    duration_v3=['', '&duration_v3=months,semester,ongoing'][0]
-    # 'api_params=1&contractor_tier=2,3&paging=0;10&' +\
     url = f'https://www.upwork.com/ab/feed/jobs/rss?{os.getenv("UPWORKER_PRV")}&' +\
-        'sort=recency&verified_payment_only=1&' +\
-        f'job_type=hourly&hourly_rate=40-{fulltime_type}{duration_v3}&q={query}'
+        'api_params=1&sort=recency&verified_payment_only=1&paging=0;10&' +\
+        f'job_type=hourly&hourly_rate={SETTINGS["target_hourly"]}-' +\
+        f'{SETTINGS["fulltime_type"]}{SETTINGS["duration_v3"]}&q={query}'
     # .replace("&", "%26")
     print(url)
     time.sleep(2)
