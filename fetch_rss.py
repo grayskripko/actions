@@ -53,9 +53,9 @@ def main():
 
         us_job = 'Only freelancers located in the United States may apply'
         if us_job in entry.summary:
-            # print(f'- US only [{ttl}]')
-            # continue
-            ttl += ' [US only]'
+            print(f'- US only [{ttl}]')
+            continue
+            # ttl += ' [US only]'
 
         message = f'{ttl}\n{entry.summary}'
         if len(message) > 4000:
