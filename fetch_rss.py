@@ -64,10 +64,10 @@ def main():
         if len(message) > 4000:
             message = f'{message[:2000]}\n...\n{message[-2000:]}'
 
-        if message in processed:
+        if entry.summary in processed:
             print(f'- Duplicated [{ttl}]')
             continue
-        processed.append(message)
+        processed.append(entry.summary)
         
         print(f'+ Send [{ttl}]')
         bot = telegram.Bot(token=bot_token)
