@@ -28,7 +28,8 @@ def clean(msgs):
         .fillna(0).astype(int)\
         .reset_index()\
         .assign(cat = lambda df: df['text'].str.extract(r'Category:(.*)').squeeze())\
-        .pipe(lambda d: d.drop([col for col in d.select_dtypes(include=['number']) if d[col].sum() < 3], axis=1))
+        .pipe(lambda d: d.set_axis(d.columns.str.lower(), axis=1))
+        # .pipe(lambda d: d.drop([col for col in d.select_dtypes(include=['number']) if d[col].sum() < 3], axis=1))
 
 
 if __name__ == '__main__':
@@ -37,12 +38,10 @@ if __name__ == '__main__':
     print(cln)
     # cln.to_csv(os.path.dirname(fpath) + '/clean.csv', index=False)
     cln\
-        .pipe(lambda d: d.set_axis(d.columns.str.lower(), axis=1))\
-        .loc[:, lambda d: d.nunique() == 2]\
-        .assign(power_bi=lambda d: d.loc[:, lambda d: d.columns.str.contains('power bi')].any(axis=1))\
-        .query('power_bi == 1')\
+        .assign(power_bi=lambda d: d['text'].str.lower().str.contains('power bi'))\
+        .query('power_bi')\
         .drop(columns=['power_bi'])\
-        .sum()\
+        .loc[:, lambda d: d.nunique() == 2].sum()\
         .sort_values(ascending=False)\
         .loc[lambda x: x > 1]\
         .pipe(print)
