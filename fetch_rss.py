@@ -7,7 +7,7 @@ from asyncio import run
     
 
 SETTINGS = dict(
-    update_freq = (5 + 0.5) * 60,
+    update_freq = (10 + 0.5) * 60,
     min_hourly = 10,
     target_hourly = 30,
     full_week =['', '&workload=full_time'][False],
