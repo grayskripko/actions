@@ -14,7 +14,7 @@ SETTINGS = dict(
     more_month=['', '&duration_v3=months,semester,ongoing'][False],
     queries  = [f'{x} NOT India' for x in [
         'skills:("data analysis" OR "power bi" OR tableau OR R OR etl OR dashboard)',
-        'skills:("google analytics")'
+        # 'skills:("google analytics")'
         ]])
     
 def get_url(query):
