@@ -2,6 +2,7 @@ import feedparser, os
 from datetime import datetime, timezone, timedelta
 import telegram, html, re
 from urllib.parse import quote
+import psycopg2
 import time
 from asyncio import run
     
@@ -14,7 +15,7 @@ SETTINGS = dict(
     more_month=['', '&duration_v3=months,semester,ongoing'][False],
     queries  = [f'{x} NOT India' for x in [
         'skills:("data analysis" OR "power bi" OR tableau OR R OR etl OR dashboard)',
-        'skills:("dbt OR t-sql OR airflow OR spark)',
+        'skills:(dbt OR t-sql OR airflow OR spark)',
         # 'skills:("google analytics")'
         ]])
     
@@ -32,12 +33,23 @@ def get_url(query):
     time.sleep(2)
     return quote(url, safe=':/&=?')
 
+def get_prev_access(conn_str):
+    with psycopg2.connect(conn_str) as conn:
+        with conn.cursor() as cur:
+            cur.execute('SELECT * FROM LAST_ACC;')
+            last_acc = cur.fetchone()[0]
+            print(f'Since prev access: {datetime.now(timezone.utc) - last_acc}')
+            cur.execute('UPDATE LAST_ACC SET time = NOW() WHERE time = %s;', (last_acc,))
+            conn.commit()
+            return last_acc
+
 def main():
     bot_token = os.getenv('TELEGRAM_TOKEN')
     chat_id = os.getenv('TELEGRAM_TO')
+    neon_str = os.getenv('NEON_STR')
     # print(get_url(SETTINGS['queries'][0]))
     feed = [(qr, entr) for qr in SETTINGS['queries'] for entr in feedparser.parse(get_url(qr)).entries]
-    print(len(feed))
+    prev_acc = get_prev_access(neon_str)
     
     processed = []
     for quer, entry in feed:
@@ -45,9 +57,9 @@ def main():
         ttl = f'<b>{entry.title.replace(" - Upwork", "")}</b> [{short_qr}]'
 
         published_datetime = datetime.strptime(entry.published, '%a, %d %b %Y %H:%M:%S %z')
-        time_diff = datetime.now(timezone.utc) - published_datetime
-        if time_diff > timedelta(seconds=SETTINGS['update_freq']):
-            print(f'- Old [{ttl}]: {strfdelta(time_diff)}')
+        time_diff = published_datetime - prev_acc
+        if time_diff < timedelta(seconds=0):
+            print(f'- Old [{ttl}]: {strfdelta(prev_acc - published_datetime)}')
             continue
 
         min_hourly_regx = re.search(r'Hourly Range</b>: \$([^\.-]+)', entry.summary)
