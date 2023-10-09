@@ -41,7 +41,8 @@ if __name__ == '__main__':
         .assign(power_bi=lambda d: d['text'].str.lower().str.contains('power bi'))\
         .query('power_bi')\
         .drop(columns=['power_bi'])\
-        .loc[:, lambda d: d.nunique() == 2].sum()\
-        .sort_values(ascending=False)\
-        .loc[lambda x: x > 1]\
-        .pipe(print)
+        .loc[:, lambda d: d.nunique() == 2]\
+        .pipe(lambda d: d.set_axis(d.columns.str.upper(), axis=1))
+    #     .sort_values(ascending=False)\
+    #     .loc[lambda x: x > 1]\
+    #     .pipe(print)
