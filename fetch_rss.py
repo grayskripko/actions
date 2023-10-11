@@ -1,6 +1,6 @@
 import json
 import feedparser, os
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timedelta
 import requests
 import telegram, html, re
 from urllib.parse import quote
@@ -123,4 +123,3 @@ if __name__ == '__main__':
     gitpat = os.environ.get('GITPAT')
     # print(get_prev_access(gitpat))
     main()
-    
