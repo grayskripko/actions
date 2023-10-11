@@ -22,4 +22,5 @@ jobs:
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_TO: ${{ secrets.TELEGRAM_TO }}
           NEON_STR: ${{ secrets.NEON_STR }}
+          GITPAT: ${{ secrets.GITPAT }}
           UPWORKER_PRV: ${{ secrets.UPWORKER_PRV }}
