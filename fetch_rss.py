@@ -1,17 +1,18 @@
 import json
+import platform
+import subprocess
 import feedparser, os
 from datetime import datetime, timedelta
 import requests
 import telegram, html, re
 from urllib.parse import quote
 import psycopg2
-from pytz import utc
+import pytz
 import time
 from asyncio import run
     
 
 SETTINGS = dict(
-    update_freq = (10 + 0.5) * 60,
     min_hourly = 10,
     target_hourly = 30,
     full_week =['', '&workload=full_time'][False],
@@ -42,9 +43,11 @@ def get_prev_access(token=None):
     response = requests.get(
         f'https://api.github.com/gists/{gist_id}', 
         headers={'Authorization': f'Bearer {token}'})
-    prev_str = json.loads(response.text)['files']['tgup.txt']['content']
-    prev_access = datetime.strptime(prev_str.split('.')[0], "%Y-%m-%d %H:%M:%S").replace(tzinfo=utc)
     assert response.status_code == 200
+    prev_str = json.loads(response.text)['files']['tgup.txt']['content']
+    prev_access_notz = datetime.strptime(prev_str.split('.')[0], "%Y-%m-%d %H:%M:%S")
+    prev_access = pytz.timezone('Etc/GMT+3').localize(prev_access_notz)
+    print(f'prev_access: {prev_access}')
     
     updated_content = {'files': {'tgup.txt': {'content': str(datetime.now())}}}
     response = requests.patch(
@@ -64,7 +67,13 @@ def get_prev_access(token=None):
     #         return last_acc
 
 def main():
+    bot_token = os.getenv('TELEGRAM_TOKEN')
+    chat_id = os.getenv('TELEGRAM_TO')
+    gitpat = os.getenv('GITPAT')
+    # neon_str = os.getenv('NEON_STR')
     # print(get_url(SETTINGS['queries'][0]))
+
+    assert([x is not None for x in [bot_token, chat_id, gitpat]])
     feed = [(qr, entr) for qr in SETTINGS['queries'] for entr in feedparser.parse(get_url(qr)).entries]
     prev_acc = get_prev_access(gitpat)
     
@@ -74,10 +83,9 @@ def main():
         ttl = f'<b>{entry.title.replace(" - Upwork", "")}</b> [{short_qr}]'
 
         published_datetime = datetime.strptime(entry.published, '%a, %d %b %Y %H:%M:%S %z')
-        time_diff = published_datetime - prev_acc
-        print('>>>', str(time_diff))
-        if time_diff < timedelta(seconds=0):
-            print(f'- Old [{ttl}]: {strfdelta(prev_acc - published_datetime)}')
+        time_diff = prev_acc - published_datetime
+        if time_diff > timedelta(seconds=0):
+            print(f'- Old [{ttl}]: {strfdelta(time_diff)}')
             continue
 
         min_hourly_regx = re.search(r'Hourly Range</b>: \$([^\.-]+)', entry.summary)
@@ -101,6 +109,7 @@ def main():
         processed.append(entry.summary)
         
         print(f'+ Send [{ttl}]')
+        print('bot token', bot_token)
         bot = telegram.Bot(token=bot_token)
         run(send_message(bot, chat_id, message))
 
@@ -117,9 +126,6 @@ def strfdelta(tdelta):
 
 
 if __name__ == '__main__':
-    bot_token = os.getenv('TELEGRAM_TOKEN'),
-    chat_id = os.getenv('TELEGRAM_TO'),
-    neon_str = os.getenv('NEON_STR'),
-    gitpat = os.environ.get('GITPAT')
     # print(get_prev_access(gitpat))
+    # subprocess.run(["sudo", "hwclock", "-s"])
     main()
