@@ -2,7 +2,7 @@ import json
 import platform
 import subprocess
 import feedparser, os
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import requests
 import telegram, html, re
 from urllib.parse import quote
@@ -45,8 +45,9 @@ def get_prev_access(token=None):
         headers={'Authorization': f'Bearer {token}'})
     assert response.status_code == 200
     prev_str = json.loads(response.text)['files']['tgup.txt']['content']
-    prev_access_notz = datetime.strptime(prev_str.split('.')[0], "%Y-%m-%d %H:%M:%S")
-    prev_access = pytz.timezone('Etc/GMT+3').localize(prev_access_notz)
+    prev_access = datetime.strptime(prev_str.split('.')[0], "%Y-%m-%d %H:%M:%S")\
+        .replace(tzinfo=timezone.utc)
+    # prev_access = pytz.timezone('Etc/GMT+3').localize(prev_access_notz)
     print(f'prev_access: {prev_access}')
     
     updated_content = {'files': {'tgup.txt': {'content': str(datetime.now())}}}
@@ -128,4 +129,5 @@ def strfdelta(tdelta):
 if __name__ == '__main__':
     # print(get_prev_access(gitpat))
     # subprocess.run(["sudo", "hwclock", "-s"])
+    # why don't run on local machine: bot_token, chat_id are missed
     main()
