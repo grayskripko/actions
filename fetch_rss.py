@@ -1,8 +1,11 @@
+import json
 import feedparser, os
 from datetime import datetime, timezone, timedelta
+import requests
 import telegram, html, re
 from urllib.parse import quote
 import psycopg2
+from pytz import utc
 import time
 from asyncio import run
     
@@ -19,7 +22,7 @@ SETTINGS = dict(
         # 'skills:(dbt OR t-sql OR airflow OR spark)',
         # 'skills:("google analytics")'
         ]])
-    
+
 def get_url(query):
     assert "skills:(" in query
     url = f'https://www.upwork.com/ab/feed/jobs/rss?{os.getenv("UPWORKER_PRV")}&' +\
@@ -34,23 +37,36 @@ def get_url(query):
     time.sleep(2)
     return quote(url, safe=':/&=?')
 
-def get_prev_access(conn_str):
-    with psycopg2.connect(conn_str) as conn:
-        with conn.cursor() as cur:
-            cur.execute('SELECT * FROM LAST_ACC;')
-            last_acc = cur.fetchone()[0]
-            print(f'Since prev access: {datetime.now(timezone.utc) - last_acc}')
-            cur.execute('UPDATE LAST_ACC SET time = NOW() WHERE time = %s;', (last_acc,))
-            conn.commit()
-            return last_acc
+def get_prev_access(token=None):
+    gist_id = '4b2de7378ef2847345660b9c544fc9eb'
+    response = requests.get(
+        f'https://api.github.com/gists/{gist_id}', 
+        headers={'Authorization': f'Bearer {token}'})
+    prev_str = json.loads(response.text)['files']['tgup.txt']['content']
+    prev_access = datetime.strptime(prev_str.split('.')[0], "%Y-%m-%d %H:%M:%S").replace(tzinfo=utc)
+    assert response.status_code == 200
+    
+    updated_content = {'files': {'tgup.txt': {'content': str(datetime.now())}}}
+    response = requests.patch(
+        f'https://api.github.com/gists/{gist_id}', 
+        headers={'Authorization': f'Bearer {token}'}, 
+        json=updated_content)
+    assert response.status_code == 200
+    return prev_access
+
+    # with psycopg2.connect(conn_str) as conn:
+    #     with conn.cursor() as cur:
+    #         cur.execute('SELECT * FROM LAST_ACC;')
+    #         last_acc = cur.fetchone()[0]
+    #         print(f'Since prev access: {datetime.now(timezone.utc) - last_acc}')
+    #         cur.execute('UPDATE LAST_ACC SET time = NOW() WHERE time = %s;', (last_acc,))
+    #         conn.commit()
+    #         return last_acc
 
 def main():
-    bot_token = os.getenv('TELEGRAM_TOKEN')
-    chat_id = os.getenv('TELEGRAM_TO')
-    neon_str = os.getenv('NEON_STR')
     # print(get_url(SETTINGS['queries'][0]))
     feed = [(qr, entr) for qr in SETTINGS['queries'] for entr in feedparser.parse(get_url(qr)).entries]
-    prev_acc = get_prev_access(neon_str)
+    prev_acc = get_prev_access(gitpat)
     
     processed = []
     for quer, entry in feed:
@@ -59,6 +75,7 @@ def main():
 
         published_datetime = datetime.strptime(entry.published, '%a, %d %b %Y %H:%M:%S %z')
         time_diff = published_datetime - prev_acc
+        print('>>>', str(time_diff))
         if time_diff < timedelta(seconds=0):
             print(f'- Old [{ttl}]: {strfdelta(prev_acc - published_datetime)}')
             continue
@@ -86,7 +103,6 @@ def main():
         print(f'+ Send [{ttl}]')
         bot = telegram.Bot(token=bot_token)
         run(send_message(bot, chat_id, message))
-            
 
 async def send_message(bot, chat_id, message):
     await bot.send_message(
@@ -99,5 +115,12 @@ def strfdelta(tdelta):
     hours, minutes = divmod(minutes, 60)
     return f"{hours}h:{minutes}m:{seconds}s"
 
+
 if __name__ == '__main__':
+    bot_token = os.getenv('TELEGRAM_TOKEN'),
+    chat_id = os.getenv('TELEGRAM_TO'),
+    neon_str = os.getenv('NEON_STR'),
+    gitpat = os.environ.get('GITPAT')
+    # print(get_prev_access(gitpat))
     main()
+    
