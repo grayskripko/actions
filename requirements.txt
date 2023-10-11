@@ -3,3 +3,4 @@ python-telegram-bot
 asyncio
 psycopg2-binary
 requests
+pytz
