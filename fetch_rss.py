@@ -79,7 +79,7 @@ def main():
     
     processed = []
     for quer, entry in feed:
-        short_qr = re.search(r'skills:\("?(\w+)', quer).group(1) if len(SETTINGS['queries']) > 1 else ''
+        short_qr = re.search(r'skills:\("?(\w+)', quer).group(1)
         ttl = f'<b>{entry.title.replace(" - Upwork", "")}</b> [{short_qr}]'
 
         published_datetime = datetime.strptime(entry.published, '%a, %d %b %Y %H:%M:%S %z')
