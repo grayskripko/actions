@@ -13,12 +13,13 @@ from asyncio import run
     
 
 SETTINGS = dict(
-    min_hourly = 10,
+    min_hourly = 20,
     target_hourly = 30,
     full_week =['', '&workload=full_time'][False],
     more_month=['', '&duration_v3=months,semester,ongoing'][False],
     queries  = [f'{x} NOT India' for x in [
-        'skills:("power bi") NOT (India)'
+        'skills:("data analysis") ("data analyst" OR "product analyst")'
+        # 'skills:("power bi") NOT (India)'
         # 'skills:("data analysis" OR "power bi" OR tableau OR R OR etl OR dashboard) NOT (India OR skills:("market research"))',
         # 'skills:(dbt OR t-sql OR airflow OR spark)',
         # 'skills:("google analytics")'
@@ -121,9 +122,11 @@ async def send_message(bot, chat_id, message):
         parse_mode=telegram.constants.ParseMode.HTML)
 
 def strfdelta(tdelta):
+    days = tdelta.days
     minutes, seconds = divmod(tdelta.seconds, 60)
     hours, minutes = divmod(minutes, 60)
-    return f"{hours}h:{minutes}m:{seconds}s"
+    total_hours = days * 24 + hours
+    return f"{total_hours}h:{minutes}m:{seconds}s"
 
 
 if __name__ == '__main__':
