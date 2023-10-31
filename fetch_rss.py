@@ -18,7 +18,7 @@ SETTINGS = dict(
     full_week =['', '&workload=full_time'][False],
     more_month=['', '&duration_v3=months,semester,ongoing'][False],
     queries  = [f'{x} NOT India' for x in [
-        'skills:("data analysis") ("data analyst" OR "product analyst")'
+        'skills:("data analysis") ("data analyst" OR "product analyst" OR R)'
         # 'skills:("power bi") NOT (India)'
         # 'skills:("data analysis" OR "power bi" OR tableau OR R OR etl OR dashboard) NOT (India OR skills:("market research"))',
         # 'skills:(dbt OR t-sql OR airflow OR spark)',
